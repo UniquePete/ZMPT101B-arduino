@@ -7,6 +7,8 @@ This library is based on [Ruslan Koptev](https://github.com/rkoptev) ACS712
 current sensors library for Arduino <https://github.com/rkoptev/ACS712-arduino>.
 This library is modified so that it can be used with ZMPT101B voltage sensor
 with the same code principle.
+An alternate constructor and method are also included to provide a similar structure
+to that in the [Rob Tillaart](https://github.com/RobTillaart/ACS712) library.
 
 ## Methods
 
@@ -16,9 +18,18 @@ with the same code principle.
 ZMPT101B(uint8_t pin, uint16_t frequency = DEFAULT_FREQUENCY);
 ```
 
-Constructor has a parameters `pin` for analog input to tell where is connected
+Basic constructor has a parameters `pin` for analog input to tell where is connected
 and the `frequency` value of the AC voltage that the sensor will measure (by
 default 50.0Hz).
+
+```c++
+ZMPT101B (uint8_t pin, float adcVref, uint16_t adcScale, float sensitivity);
+```
+
+Alternate constructor provides a similar structur to that used in the Tillaart ACS712
+library. It has a parameters `pin` for analog input to tell where is connected,
+`adcVref` to identify the ADC reference voltage, `adcScale` to set the ADC scale and
+`sensitivity` to set the sensitivity of the sensor.
 
 ### Reading RMS Voltage Value
 
@@ -31,6 +42,13 @@ By default this method will only calculate the RMS value of one period wave. If
 you want the calculation to be done over several periods you can specify how
 many iterations you want. Reading more than once will usually return a more
 precise value however, sometimes it will take longer.
+
+```c++
+float getRmsVoltage(uint16_t frequency, uint8_t loopCount)
+```
+
+This method allows us to specify the input voltage frequency, from which the
+measurement period is derived, at the time of measurement.
 
 ### Set Sensitivity
 
@@ -86,7 +104,8 @@ serial monitor. Wait until the `sensitivity` value is displayed and then copy it
 
 #### 2. Start measurement
 
-Open the [simple_usage.ino](/examples/simple_usage/simple_usage.ino) example
+Open either the [simple_usage.ino](/examples/simple_usage/simple_usage.ino) example
 then change the `SENSITIVITY` value (seventh line) based on the value you got in
-the previous process. Upload the code then open the serial monitor to observe
-the displayed voltage value.
+the previous process or use the alternate constructor in the [alternate_usage.ino](/examples/simple_usage/alternate_usage.ino)
+example to set the sensitivity in the sensor constructor. Upload the code then open
+the serial monitor to observe the displayed voltage value.
