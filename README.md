@@ -26,8 +26,8 @@ default 50.0Hz).
 ZMPT101B (uint8_t pin, float adcVref, uint16_t adcScale, float sensitivity);
 ```
 
-Alternate constructor provides a similar structur to that used in the Tillaart ACS712
-library. It has a parameters `pin` for analog input to tell where is connected,
+Alternate constructor provides a similar structure to that used in the Tillaart ACS712
+library. It has parameters `pin` to identify the ADC to which the sensor is connected,
 `adcVref` to identify the ADC reference voltage, `adcScale` to set the ADC scale and
 `sensitivity` to set the sensitivity of the sensor.
 
