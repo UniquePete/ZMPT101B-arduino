@@ -7,6 +7,23 @@ ZMPT101B::ZMPT101B(uint8_t pin, uint16_t frequency)
 {
 	this->pin = pin;
 	period = 1000000 / frequency;
+	this->adcVref = VREF;
+	this->adcScale = ADC_SCALE;
+	pinMode(pin, INPUT);
+}
+
+/// @brief Alternate ZMPT101B constructor
+/// @param pin analog pin that ZMPT101B connected to.
+/// @param adcVref ADC max voltage
+/// @param adcScale ADC resolution
+/// @param sensitivity module sensitivity
+ZMPT101B::ZMPT101B(uint8_t pin, float adcVref, uint16_t adcScale, float sensitivity)
+{
+	this->pin = pin;
+	period = 1000000 / frequency;
+	this->adcVref = adcVref;
+	this->adcScale = adcScale;
+	this->sensitivity = sensitivity;
 	pinMode(pin, INPUT);
 }
 
@@ -35,6 +52,16 @@ int ZMPT101B::getZeroPoint()
 }
 
 /// @brief Calculate root mean square (RMS) of AC valtage
+/// @param frequency AC system frequency
+/// @param loopCount Loop count to calculate
+/// @return root mean square (RMS) of AC valtage
+float ZMPT101B::getRmsVoltage(uint16_t frequency, uint8_t loopCount)
+{
+	period = 1000000 / frequency;
+	return getRmsVoltage(loopCount);
+}
+
+/// @brief Calculate root mean square (RMS) of AC valtage
 /// @param loopCount Loop count to calculate
 /// @return root mean square (RMS) of AC valtage
 float ZMPT101B::getRmsVoltage(uint8_t loopCount)
@@ -57,7 +84,7 @@ float ZMPT101B::getRmsVoltage(uint8_t loopCount)
 			measurements_count++;
 		}
 
-		readingVoltage += sqrt(Vsum / measurements_count) / ADC_SCALE * VREF * sensitivity;
+		readingVoltage += sqrt(Vsum / measurements_count) / adcScale * adcVref * sensitivity;
 	}
 
 	return readingVoltage / loopCount;
